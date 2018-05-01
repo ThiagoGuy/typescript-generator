@@ -56,7 +56,7 @@
 		}
 
 		.container-menu {
-			margin-bottom: 10px;
+			margin-bottom: 15px;
 		}
 
 		.container-menu label {
@@ -138,16 +138,14 @@
 			background-color: #6395bd;
 			flex: 1;
 			padding: 1rem;
-			border-top-left-radius: 5px;
-			border-bottom-left-radius: 5px;
+			border-radius: 5px 0 0 5px;
 		}
 
 		.right-half {
 			background-color: #174a71;
 			flex: 1;
 			padding: 1rem;
-			border-top-right-radius: 5px;
-			border-bottom-right-radius: 5px;
+			border-radius: 0 5px 5px 0;
 		}
 
 		.title-menu {
@@ -193,10 +191,13 @@
 
 			.left-half {
 				flex: none;
+				border-radius: 5px 5px 0 0;
 			}
 			.right-half {
 				flex: none;
+				border-radius: 0 0 5px 5px;
 			}
+
 		}
 	</style>
 	<title>TS Generator</title>
@@ -241,37 +242,44 @@
 			<div class="container-menu">
 				<input type="radio" name="generatorType" value="class" id="radio-class-generator" checked="checked">
 				<label for="radio-class-generator">
-					<span class="radio">Class Generator</span>
+					<span class="radio">Class</span>
+				</label>
+			</div>
+			<div class="container-menu">
+				<input type="radio" name="generatorType" value="interface" id="radio-interface-generator">
+				<label for="radio-interface-generator">
+					<span class="radio">Interface</span>
 				</label>
 			</div>
 			<div class="container-menu">
 				<input type="radio" name="generatorType" value="setter" id="radio-setter-generator">
 				<label for="radio-setter-generator">
-					<span class="radio">Setter Generator</span>
+					<span class="radio">Setter</span>
 				</label>
 			</div>
 		</section>
 
-		<div class="title-menu">
-			<h4>What kind of assignment do you need?</h4>
+		<div id="assignmentOption" style="display: none">
+			<div class="title-menu">
+				<h4>What kind of assignment do you need?</h4>
+			</div>
+			<section class="section-menu">
+				<div class="container-menu">
+					<input type="radio" name="assignments" value="assignmentSignal" id="radio-assignment" checked="checked">
+					<label for="radio-assignment">
+						<span class="radio">Assignment signal</span>
+					</label>
+				</div>
+				<div class="container-menu">
+					<input type="radio" name="assignments" value="setterMethod" id="radio-setter">
+					<label for="radio-setter">
+						<span class="radio">Setter method</span>
+					</label>
+				</div>
+			</section>
 		</div>
-		<section class="section-menu">
-			<div class="container-menu">
-				<input type="radio" name="assignments" value="assignmentSignal" id="radio-assignment" checked="checked">
-				<label for="radio-assignment">
-					<span class="radio">Assignment signal</span>
-				</label>
-			</div>
-			<div class="container-menu">
-				<input type="radio" name="assignments" value="setterMethod" id="radio-setter">
-				<label for="radio-setter">
-					<span class="radio">Setter method</span>
-				</label>
-			</div>
-		</section>
 
-		<div id="exclusiveSetterOptions" style="display: none">
-
+		<div id="arrayInstantiationOption" style="display: none">
 			<div class="title-menu">
 				<h4>Do you need to instantiate arrays?</h4>
 			</div>
@@ -289,8 +297,10 @@
 					</label>
 				</div>
 			</section>
+		</div>
 
 
+		<div id="stringDataTypeOption" style="display: none">
 			<div class="title-menu">
 				<h4>Do you need to work only with the string data type?</h4>
 			</div>
@@ -308,8 +318,10 @@
 					</label>
 				</div>
 			</section>
+		</div>
 
 
+		<div id="emptyStringOption" style="display: none">
 			<div class="title-menu">
 				<h4>Do you need to work only with empty string?</h4>
 			</div>
@@ -327,13 +339,12 @@
 					</label>
 				</div>
 			</section>
-
 		</div>
 
 	</section>
 
 	<div class="footer">
-		<h5>version 2.0.0</h5>
+		<h5>version 3.0.0</h5>
 	</div>
 
 	<script>
@@ -346,9 +357,28 @@
 		const resultInput = document.querySelector("#result");
 		const generatorTypeSelect = document.querySelector("#generatorTypeSelect");
 
-		class SetterOptions {
+		class Options {
+			supportAssignment() {
+				return false;
+			}
+
+			supportStrigDataType() {
+				return false;
+			}
+
+			supportArrayInstantiation() {
+				return false;
+			}
+
+			supportEmptyString() {
+				return false;
+			}
+		}
+
+		class SetterOptions extends Options {
 
 			constructor() {
+				super();
 				this.assignment = "";
 				this.arrayInstantiation = "";
 				this.stringDataType = "";
@@ -366,12 +396,38 @@
 			canUseEmptyString() {
 				return this.emptyString == "true";
 			}
+
+			supportAssignment() {
+				return true;
+			}
+
+			supportStrigDataType() {
+				return true;
+			}
+
+			supportArrayInstantiation() {
+				return true;
+			}
+
+			supportEmptyString() {
+				return true;
+			}
 		}
 
-		class ClassOptions {
-
+		class ClassOptions extends Options {
 			constructor() {
+				super();
 				this.assignment = "";
+			}
+
+			supportAssignment() {
+				return true;
+			}
+		}
+
+		class InterfaceOptions extends Options {
+			constructor() {
+				super();
 			}
 		}
 
@@ -653,7 +709,7 @@
 
 			// class className {
 			writeStartClass(clazz) {
-				const syntax = "class " + clazz.className + " {";
+				const syntax = "export class " + clazz.className + " {";
 
 				this._write(syntax);
 				this.writeLine();
@@ -760,6 +816,51 @@
 				this._write(middleSyntax);
 				this.writeLine();
 				this._write(endSyntax);
+				this.writeLine();
+			}
+
+			writeLine() {
+				this._write("\n");
+			}
+
+			_write(str) {
+				resultInput.value += str;
+			}
+
+		}
+
+
+		class InterfaceWriter {
+
+			// interface className {
+			writeStartClass(clazz) {
+				const syntax = "export interface " + clazz.className + " {";
+
+				this._write(syntax);
+				this.writeLine();
+			}
+
+			// }
+			writeEndClass() {
+				const syntax = "}";
+
+				this._write(syntax);
+				this.writeLine();
+			}
+
+			// fieldName: fieldType;
+			writeAttribute(attribute) {
+				const syntax = "	" + attribute.fieldName + ": " + attribute.fieldType + ";";
+
+				this._write(syntax);
+				this.writeLine();
+			}
+
+			// fieldName: Array<fieldType>;
+			writeArrayAttribute(arrayAttribute) {
+				const syntax = "	" + arrayAttribute.fieldName + ": Array<" + arrayAttribute.fieldType + ">;";
+
+				this._write(syntax);
 				this.writeLine();
 			}
 
@@ -951,6 +1052,49 @@
 			return options;
 		}
 
+		function getInterfaceOptions() {
+			return new InterfaceOptions();
+		}
+
+		function updateOptions(generatorType) {
+			let options;
+
+			if (generatorType == "setter") {
+				options = new SetterOptions();
+			} else if (generatorType == "class") {
+				options = new ClassOptions();
+			} else if (generatorType == "interface") {
+				options = new InterfaceOptions();
+			} else {
+				showError('Generator was not found.');
+			}
+
+			assignmentOption.style.display = options.supportAssignment() ? "initial" : "none";
+			arrayInstantiationOption.style.display = options.supportArrayInstantiation() ? "initial" : "none";
+			stringDataTypeOption.style.display = options.supportStrigDataType() ? "initial" : "none";
+			emptyStringOption.style.display = options.supportEmptyString() ? "initial" : "none";
+		}
+
+		function generate(generatorType) {
+			const generator = new Generator();
+
+			if (generatorType == "setter") {
+				generator.writer = new SetterWriter();
+				generator.options = getSetterOptions();
+				generator.generateSetters(jsonInput.value, rootClassInput.value);
+			} else if (generatorType == "class") {
+				generator.writer = new ClassWriter();
+				generator.options = getClassOptions();
+				generator.generateClass(jsonInput.value, rootClassInput.value);
+			} else if (generatorType == "interface") {
+				generator.writer = new InterfaceWriter();
+				generator.options = getInterfaceOptions();
+				generator.generateClass(jsonInput.value, rootClassInput.value);
+			} else {
+				showError('Generator was not found.');
+			}
+		}
+
 		class Generator {
 
 			constructor() {
@@ -988,18 +1132,7 @@
 		}
 
 		generateBtn.addEventListener("click", function () {
-			const generatorType = getSelectedOption("generatorType");
-			const generator = new Generator();
-
-			if (generatorType == "setter") {
-				generator.writer = new SetterWriter();
-				generator.options = getSetterOptions();
-				generator.generateSetters(jsonInput.value, rootClassInput.value);
-			} else if (generatorType == "class") {
-				generator.writer = new ClassWriter();
-				generator.options = getClassOptions();
-				generator.generateClass(jsonInput.value, rootClassInput.value);
-			}
+			generate(getSelectedOption("generatorType"));
 		});
 
 		clearBtn.addEventListener("click", function () {
@@ -1018,14 +1151,10 @@
 		});
 
 		generatorTypeSelect.addEventListener("change", function (e) {
-			const generatorType = e.target.value;
-
-			if (generatorType == "setter") {
-				exclusiveSetterOptions.style.display = "initial";
-			} else {
-				exclusiveSetterOptions.style.display = "none";
-			}
+			updateOptions(e.target.value);
 		});
+
+		updateOptions(getSelectedOption("generatorType"));
 
 	</script>
 

@@ -1082,7 +1082,7 @@
 
 		}
 
-		class Utils {
+		class IOUtils {
 
 			static downloadText(fileName, text) {
 				this.download(fileName, text, "text/plain");
@@ -1095,6 +1095,10 @@
 				this._downloadLink.href = window.URL.createObjectURL(contentAsBlob);
 				this._downloadLink.click();
 			}
+
+		}
+
+		class Utils {
 
 			static getListFieldName(fieldName, value) {
 				if (fieldName) {
@@ -1177,7 +1181,7 @@
 					}
 				}
 				catch (e) {
-					console.log(e);
+					console.error(e);
 				}
 			}
 
@@ -1208,12 +1212,15 @@
 
 			_generate(json, rootName, generator) {
 				let jsonParsed;
-				clearConsole();
 				if (jsonParsed = Utils.parseJson(json)) {
+					try {
 					generator.create(jsonParsed, rootName);
 					return generator.build();
+					} catch (e) {
+						showError("The generator failed to generate the code.");
+					}
 				} else {
-					showError("Invalid JSON was found.");
+					showError("Invalid JSON was detected.");
 				}
 			}
 
@@ -1225,10 +1232,6 @@
 				this._writer = writer;
 			}
 
-		}
-
-		function clearConsole() {
-			resultInput.value = "";
 		}
 
 		function getSelectedOption(componentName) {
@@ -1253,7 +1256,7 @@
 			alert(message);
 		}
 
-		function getOptions(classOptions) {
+		function fillOptions(classOptions) {
 			if (classOptions.supportArrayInstantiation) {
 				classOptions.arrayInstantiation = getSelectedOption("array-instantiation");
 			}
@@ -1298,15 +1301,15 @@
 
 			if (generatorType == "setter") {
 				generator.writer = new SetterWriter();
-				generator.options = getOptions(new SetterOptions());
+				generator.options = fillOptions(new SetterOptions());
 				contents = generator.generateSetters(jsonInput.value, rootClassInput.value);
 			} else if (generatorType == "class") {
 				generator.writer = new ClassWriter();
-				generator.options = getOptions(new ClassOptions());
+				generator.options = fillOptions(new ClassOptions());
 				contents = generator.generateClass(jsonInput.value, rootClassInput.value);
 			} else if (generatorType == "interface") {
 				generator.writer = new InterfaceWriter();
-				generator.options = getOptions(new InterfaceOptions());
+				generator.options = fillOptions(new InterfaceOptions());
 				contents = generator.generateClass(jsonInput.value, rootClassInput.value);
 			} else {
 				showError('Generator was not found.');
@@ -1317,7 +1320,7 @@
 			return contents && contents.length > 0;
 		}
 
-		function printContentsToTextArea() {
+		function printContentsToConsole() {
 			if (!hasContents()) {
 				showError("No content was generated.");
 			}
@@ -1330,7 +1333,7 @@
 				showError("No content found.");
 			}
 
-			contents.forEach(content => Utils.downloadText(`${content.name}.ts`, content.text));
+			contents.forEach(content => IOUtils.downloadText(`${content.name}.ts`, content.text));
 		}
 
 		function clearAllSelections() {
@@ -1345,6 +1348,8 @@
 			if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
 				element.select();
 				document.execCommand("Copy");
+			} else {
+				showError("Cannot copy the selected content.")
 			}
 		}
 
@@ -1355,9 +1360,14 @@
 			rootClassInput.focus();
 		}
 
+		function clearConsole() {
+			resultInput.value = "";
+		}
+
 		generateBtn.addEventListener("click", function () {
+			clearConsole();
 			generate(getSelectedOption("generatorType"));
-			printContentsToTextArea();
+			printContentsToConsole();
 		});
 
 		downloadBtn.addEventListener("click", function () {

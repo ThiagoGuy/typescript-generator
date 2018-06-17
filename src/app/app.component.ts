@@ -32,20 +32,20 @@ export class AppComponent implements OnInit {
   @ViewChild('resultInput')
   private resultInput: ElementRef;
 
-  private rootClass: string;
-  private json: string;
-  private result: string;
+  public rootClass: string;
+  public json: string;
+  public result: string;
 
   /* OPTIONS */
-  private options: Options;
   private writer: Writer;
-  private generatorType: GeneratorTypesEnum;
-  private generatorTypes = GeneratorTypesEnum;
-  private assignments = AssignmentsEnum;
-  private arrayInstantiation = QuestionEnum;
-  private stringDataTypeOnly = QuestionEnum;
-  private emptyString = QuestionEnum;
-  private encryptions = EncryptionEnum;
+  public options: Options;
+  public generatorType: GeneratorTypesEnum;
+  public generatorTypes = GeneratorTypesEnum;
+  public assignments = AssignmentsEnum;
+  public arrayInstantiation = QuestionEnum;
+  public stringDataTypeOnly = QuestionEnum;
+  public emptyString = QuestionEnum;
+  public encryptions = EncryptionEnum;
 
   private contents: Array<Content>;
 
@@ -55,7 +55,7 @@ export class AppComponent implements OnInit {
     this.changeGenerator();
   }
 
-  private changeGenerator() {
+  public changeGenerator() {
 
     if (this.generatorType === GeneratorTypesEnum.CLASS) {
       this.options = new ClassOptions();
@@ -72,7 +72,7 @@ export class AppComponent implements OnInit {
 
   }
 
-  private generate() {
+  public generate() {
     let jsonParsed: any;
     this.clearConsole();
 
@@ -98,15 +98,22 @@ export class AppComponent implements OnInit {
     this.printContentsToConsole();
   }
 
-  private downloadContents() {
+  public downloadContents() {
     if (UtilService.isEmpty(this.contents)) {
       AlertService.showError('No content found.');
     }
 
     this.contents.forEach(content => UtilService.downloadText(`${content.name}.ts`, content.text));
   }
+  
+    public resetFields() {
+      this.rootClass = '';
+      this.json = '';
+      this.result = '';
+      this.rootClassInput.nativeElement.focus();
+    }
 
-  private copy() {
+  public copy() {
     this.copyContent(this.resultInput);
     this.clearAllSelections();
   }
@@ -117,13 +124,6 @@ export class AppComponent implements OnInit {
     }
 
     this.contents.forEach(content => this.result += content.text);
-  }
-
-  private resetFields() {
-    this.rootClass = '';
-    this.json = '';
-    this.result = '';
-    this.rootClassInput.nativeElement.focus();
   }
 
   private clearConsole() {

@@ -1,0 +1,136 @@
+<body>
+
+  <div class="title">
+    <h3>Typescript Generator</h3>
+  </div>
+
+  <section class="container">
+    <div class="left-half">
+      <article>
+        <h1>Put your JSON</h1>
+
+        <input #rootClassInput id="rootClass" type="text" [(ngModel)]="rootClass" style="width: 80%" placeholder="Class name" />
+        <textarea id="json" type="text" [(ngModel)]="json" rows="25" style="width: 80%" placeholder="Paste your JSON here.."></textarea>
+        <p>
+          <input id="clearBtn" type="button" value="Clear" (click)="resetFields()" class="btn btn-default" />
+          <input id="generateBtn" type="button" value="Generate" (click)="generate()" class="btn btn-default" />
+        </p>
+      </article>
+    </div>
+    <div class="right-half">
+      <article>
+        <h1>Watch the result</h1>
+        <textarea #resultInput id="result" type="text" [(ngModel)]="result" rows="25" style="width: 80%" readonly></textarea>
+        <p>
+          <input id="copyBtn" type="button" value="Copy" (click)="copy()" class="btn btn-default" />
+          <input id="downloadBtn" type="button" value="Download" (click)="downloadContents()" class="btn btn-default" />
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section-options">
+
+    <div class="title-menu">
+      <h4>What kind of generator do you need?</h4>
+    </div>
+
+    <section class="section-menu">
+      <div class="container-menu" *ngFor="let genType of generatorTypes | enumToArray">
+        <input type="radio" id="radio-{{ genType.key }}-generator" name="generatorType" [value]="genType.val" [(ngModel)]="generatorType"
+          (change)="changeGenerator()">
+        <label for="radio-{{ genType.key }}-generator">
+          <span class="radio">{{ genType.val }}</span>
+        </label>
+      </div>
+    </section>
+
+    <div id="assignmentOption" *ngIf="options.supportAssignment()">
+      <div class="title-menu">
+        <h4>What kind of assignment do you need?</h4>
+      </div>
+      <section class="section-menu">
+        <div class="container-menu" *ngFor="let assign of assignments | enumToArray">
+          <input type="radio" id="radio-{{ assign.key }}" name="assignments" [value]="assign.val" [(ngModel)]="options.assignment">
+          <label for="radio-{{ assign.key }}">
+            <span class="radio">{{ assign.val }}</span>
+          </label>
+        </div>
+      </section>
+    </div>
+
+    <div id="arrayInstantiationOption" *ngIf="options.supportArrayInstantiation()">
+      <div class="title-menu">
+        <h4>Do you need to instantiate arrays?</h4>
+      </div>
+      <section class="section-menu">
+        <div class="container-menu" *ngFor="let arrInstant of arrayInstantiation | enumToArray">
+          <input type="radio" id="radio-array-{{ arrInstant.key }}" name="array-instantiation" [value]="arrInstant.val" [(ngModel)]="options.arrayInstantiation">
+          <label for="radio-array-{{ arrInstant.key }}">
+            <span class="radio">{{ arrInstant.val }}</span>
+          </label>
+        </div>
+      </section>
+    </div>
+
+
+    <div id="stringDataTypeOption" *ngIf="options.supportStrigDataTypeOnly()">
+      <div class="title-menu">
+        <h4>Do you need to work only with the string data type?</h4>
+      </div>
+      <section class="section-menu">
+        <div class="container-menu" *ngFor="let strDtType of stringDataTypeOnly | enumToArray">
+          <input type="radio" id="radio-string-{{ strDtType.key }}" name="string-data-type" [value]="strDtType.val" [(ngModel)]="options.stringDataTypeOnly">
+          <label for="radio-string-{{ strDtType.key }}">
+            <span class="radio">{{ strDtType.val }}</span>
+          </label>
+        </div>
+      </section>
+    </div>
+
+
+    <div id="emptyStringOption" *ngIf="options.supportEmptyString()">
+      <div class="title-menu">
+        <h4>Do you need to work only with empty string?</h4>
+      </div>
+      <section class="section-menu">
+        <div class="container-menu" *ngFor="let emptyStr of emptyString | enumToArray">
+          <input type="radio" id="radio-empty-string-{{ emptyStr.key }}" name="empty-string" [value]="emptyStr.val" [(ngModel)]="options.emptyString">
+          <label for="radio-empty-string-{{ emptyStr.key }}">
+            <span class="radio">{{ emptyStr.val }}</span>
+          </label>
+        </div>
+      </section>
+    </div>
+
+
+    <div id="encryptionAnnotationOption" *ngIf="options.supportEncryptionAnnotation()">
+      <div class="title-menu">
+        <h4>What kind of encryption annotation do you need?</h4>
+      </div>
+      <section class="section-menu">
+        <div class="container-menu" *ngFor="let encrypt of encryptions | enumToArray">
+          <input type="radio" id="radio-encryptionAnnotation-{{ encrypt.key }}" name="encryptionAnnotation" [value]="encrypt.val" [(ngModel)]="options.encryption">
+          <label for="radio-encryptionAnnotation-{{ encrypt.key }}">
+            <span class="radio">{{ encrypt.val }}</span>
+          </label>
+        </div>
+      </section>
+
+      <div class="title-menu">
+        <h4>Where is the encryption annotation located?</h4>
+      </div>
+      <section class="section-menu">
+        <div class="container-menu">
+          <input id="encryptionAnnotationPath" type="text" [(ngModel)]="options.encryptionPath" placeholder="Path" />
+        </div>
+      </section>
+    </div>
+
+  </section>
+
+  <div class="footer">
+    <h5>version 5.0.0</h5>
+  </div>
+
+</body>

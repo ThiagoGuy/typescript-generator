@@ -1,0 +1,190 @@
+
+div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+h1 {
+    font-size: 1.75rem;
+    margin: 0 0 5px 0.75rem 0;
+}
+
+textarea {
+    resize: none;
+    max-height: 100%;
+}
+
+button {
+    background-color: #1287c2;
+}
+
+.section {
+    height: 100vh;
+}
+
+.section-options {
+    padding: 30px 120px;
+}
+
+.section-menu {
+    background-color: #101e29;
+    padding: 50px;
+    padding-left: 175px;
+    border-radius: 5px;
+}
+
+.section-menu input[type="radio"],
+.section-menu input[type="checkbox"] {
+    display: none;
+}
+
+.container-menu {
+    margin-bottom: 15px;
+}
+
+.container-menu label {
+    position: relative;
+}
+
+.container-menu span::before,
+.container-menu span::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+.container-menu span.radio:hover {
+    cursor: pointer;
+}
+
+.container-menu span.radio::before {
+    left: -52px;
+    width: 45px;
+    height: 25px;
+    background-color: #A8AAC1;
+    border-radius: 50px;
+}
+
+.container-menu span.radio::after {
+    left: -49px;
+    width: 17px;
+    height: 17px;
+    border-radius: 10px;
+    background-color: #6C788A;
+    transition: left .3s, background-color .3s;
+}
+
+.container-menu input {
+    margin-left: -100px;
+    height: 25px;
+}
+
+input[type="radio"]:checked+label span.radio::after {
+    left: -27px;
+    background-color: rgb(233, 108, 6);
+}
+
+input {
+    margin: 5px;
+}
+
+.btn {
+    font-size: 14px;
+    padding: 8px 24px;
+    margin: 2px;
+    border: none;
+    border-radius: 2px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn:hover {
+    cursor: pointer;
+}
+
+.btn-default {
+    color: black;
+    background-color: #e7e7e7;
+    box-shadow: 0 1px 1px #90007e;
+}
+
+.btn-default:hover {
+    background-color: #f8f8f8;
+}
+
+.container {
+    text-align: center;
+    display: flex;
+    padding: 5px;
+    margin: 0 5%;
+}
+
+.left-half {
+    background-color: #6395bd;
+    flex: 1;
+    padding: 1rem;
+    border-radius: 5px 0 0 5px;
+}
+
+.right-half {
+    background-color: #174a71;
+    flex: 1;
+    padding: 1rem;
+    border-radius: 0 5px 5px 0;
+}
+
+.title-menu {
+    text-align: left;
+    padding: 20px;
+    padding-left: 50px;
+}
+
+.title {
+    text-align: center;
+    padding: 10px;
+}
+
+.footer {
+    text-align: center;
+    padding: 10px 0;
+}
+
+#optionButton {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+}
+
+#topButton {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+}
+
+@media (max-width: 920px) {
+    textarea {
+        max-height: 50%;
+    }
+    .container {
+        display: inline;
+        padding: 0;
+        margin: 0;
+    }
+    .section-options {
+        padding: 0;
+    }
+
+    .left-half {
+        flex: none;
+        border-radius: 5px 5px 0 0;
+    }
+    .right-half {
+        flex: none;
+        border-radius: 0 0 5px 5px;
+    }
+
+}

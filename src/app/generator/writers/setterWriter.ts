@@ -1,5 +1,5 @@
 import { Writer } from './writer';
-import { UtilService } from '../../service/utils.service';
+import { UtilService } from '../service/utils.service';
 import { Instance } from '../models/instance';
 import { ArrayInstance } from '../models/arrayInstance';
 import { ArraySetter } from '../models/arraySetter';

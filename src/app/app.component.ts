@@ -17,6 +17,7 @@ import { SetterGenerator } from './generator/setterGenerator';
 import { ClassGenerator } from './generator/classGenerator';
 import { Content } from './generator/models/content';
 import { Generator } from './generator/generator.interface';
+import { GeneratorFactory } from './generator/generatorFactory';
 
 @Component({
   selector: 'app-root',
@@ -76,25 +77,15 @@ export class AppComponent implements OnInit {
     let jsonParsed: any;
     this.clearConsole();
 
-    if (jsonParsed = UtilService.parseJson(this.json)) {
-      let generator: Generator;
+    try {
+      jsonParsed = UtilService.parseJson(this.json);
 
-      if (this.generatorType === GeneratorTypesEnum.SETTER) {
-        generator = new SetterGenerator(this.options, this.writer as SetterWriter);
-      } else {
-        generator = new ClassGenerator(this.options, this.writer as ClassWriter);
-      }
-
-      try {
-        generator.create(jsonParsed, this.rootClass);
-        this.contents = generator.build();
-      } catch (error) {
-        AlertService.showError('The generator failed to generate the code.', error);
-      }
-    } else {
-      AlertService.showError('Invalid JSON was detected.');
+      const generator: Generator = GeneratorFactory.create(this.generatorType, this.options, this.writer);
+      generator.create(jsonParsed, this.rootClass);
+      this.contents = generator.build();
+    } catch (error) {
+      AlertService.showError('The generator failed to generate the code.', error);
     }
-
     this.printContentsToConsole();
   }
 
@@ -105,13 +96,13 @@ export class AppComponent implements OnInit {
 
     this.contents.forEach(content => UtilService.downloadText(`${content.name}.ts`, content.text));
   }
-  
-    public resetFields() {
-      this.rootClass = '';
-      this.json = '';
-      this.result = '';
-      this.rootClassInput.nativeElement.focus();
-    }
+
+  public resetFields() {
+    this.rootClass = '';
+    this.json = '';
+    this.result = '';
+    this.rootClassInput.nativeElement.focus();
+  }
 
   public copy() {
     this.copyContent(this.resultInput);

@@ -1,9 +1,8 @@
-import { AlertService } from '../service/alert.service';
 import { Options } from './options/options.interface';
 import { Instance } from './models/instance';
 import { ArrayInstance } from './models/arrayInstance';
 import { ArraySetter } from './models/arraySetter';
-import { UtilService } from '../service/utils.service';
+import { UtilService } from './service/utils.service';
 import { SetterWriter } from './writers/setterWriter';
 import { AssignmentsEnum } from './enums/assignments.enum';
 import { QuestionEnum } from './enums/question.enum';
@@ -26,11 +25,11 @@ export class SetterGenerator implements Generator {
     constructor(options: Options, writer: SetterWriter) {
         
         if (!options) {
-            AlertService.showError('Options cannot be empty.');
+            throw new Error('Options cannot be empty.');
         }
 
         if (!writer) {
-            AlertService.showError('The writer cannot be null.');
+            throw new Error('The writer cannot be null.');
         }
         
         this.options = options;
@@ -51,7 +50,7 @@ export class SetterGenerator implements Generator {
         }
 
         if (UtilService.isBlank(fieldName)) {
-            AlertService.showError('Field name cannot be blank.');
+            throw new Error('Field name cannot be blank.');
         }
 
         fieldName = UtilService.fixFieldName(fieldName);
@@ -74,7 +73,7 @@ export class SetterGenerator implements Generator {
         for (let field in json) {
 
             if (UtilService.isBlank(field)) {
-                AlertService.showError('Field name cannot be blank.');
+                throw new Error('Field name cannot be blank.');
             }
 
             const val: any = json[field];

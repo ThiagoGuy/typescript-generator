@@ -1,5 +1,4 @@
-import { UtilService } from '../service/utils.service';
-import { AlertService } from '../service/alert.service';
+import { UtilService } from './service/utils.service';
 import { Class } from './models/class';
 import { Import } from './models/import';
 import { ArrayAttribute } from './models/arrayAttribute';
@@ -20,11 +19,11 @@ export class ClassGenerator implements Generator {
     constructor(options: Options, writer: ClassWriter) {
 
         if (!options) {
-            AlertService.showError('Options cannot be empty.');
+            throw new Error('Options cannot be empty.');
         }
 
         if (!writer) {
-            AlertService.showError('The writer cannot be null.');
+            throw new Error('The writer cannot be null.');
         }
 
         this.options = options;
@@ -39,7 +38,7 @@ export class ClassGenerator implements Generator {
         }
 
         if (UtilService.isBlank(fieldName)) {
-            AlertService.showError('Class name cannot be blank.');
+            throw new Error('Class name cannot be blank.');
         }
 
         const className: string = UtilService.getClassName(fieldName);
@@ -50,7 +49,7 @@ export class ClassGenerator implements Generator {
         for (let field in json) {
 
             if (UtilService.isBlank(field)) {
-                AlertService.showError('Field name cannot be blank.');
+                throw new Error('Field name cannot be blank.');
             }
 
             const val: any = json[field];

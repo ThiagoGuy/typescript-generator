@@ -141,7 +141,7 @@ export class ClassGenerator implements Generator {
             this.writer.writeEndClass();
             this.writer.writeLine();
 
-            contents.push(new Content(clazz.className, this.writer.toString()));
+            contents.push(new Content(UtilService.fixFieldName(clazz.className), this.writer.toString()));
             this.writer.reset();
         });
 

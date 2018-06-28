@@ -11,7 +11,6 @@ export class GeneratorFactory {
 
     static create(generatorType: GeneratorTypesEnum, options: Options, writer: Writer): Generator {
 
-
         switch (generatorType) {
             case GeneratorTypesEnum.CLASS:
             case GeneratorTypesEnum.INTERFACE:

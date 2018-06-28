@@ -79,7 +79,7 @@ export class ClassGenerator implements Generator {
                 } else {
                     const isEncrypted: boolean = UtilService.isBase64(val);
 
-                    if (this.options.encryption === EncryptionEnum.ENCRYPT && isEncrypted) {
+                    if (this.options.encryption !== EncryptionEnum.NONE && isEncrypted) {
                         clazz.attributes.push(new Attribute(field, fieldType, this.options.encryption));
 
                         if (!isEncryptionImportApplied && this.options.encryptionPath) {

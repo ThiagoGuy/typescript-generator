@@ -74,13 +74,12 @@ export class AppComponent implements OnInit {
   }
 
   public generate() {
-    let jsonParsed: any;
     this.clearConsole();
-
+    
     try {
-      jsonParsed = UtilService.parseJson(this.json);
-
+      const jsonParsed: any = UtilService.parseJson(this.json);
       const generator: Generator = GeneratorFactory.create(this.generatorType, this.options, this.writer);
+
       generator.create(jsonParsed, this.rootClass);
       this.contents = generator.build();
     } catch (error) {

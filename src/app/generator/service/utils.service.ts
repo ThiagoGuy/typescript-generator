@@ -70,7 +70,7 @@ export class UtilService {
     }
 
     static isBlank(val: string): boolean {
-        return val ? val.indexOf(' ') != -1 : true;
+        return (!val || /^\s*$/.test(val));
     }
 
     static isObject(val: any): boolean {

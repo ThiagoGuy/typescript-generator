@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { EnumToArrayPipe } from './pipe/enumToArray.pipe';
+import { UtilService } from './service/utils.service';
 
 @NgModule({
   declarations: [
@@ -13,7 +14,7 @@ import { EnumToArrayPipe } from './pipe/enumToArray.pipe';
     BrowserModule, 
     FormsModule
   ],
-  providers: [],
+  providers: [UtilService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

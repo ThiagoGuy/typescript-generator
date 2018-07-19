@@ -13,8 +13,6 @@ import { AssignmentsEnum } from './generator/enums/assignments.enum';
 import { QuestionEnum } from './generator/enums/question.enum';
 import { EncryptionEnum } from './generator/enums/encryption.enum';
 import { UtilService } from './service/utils.service';
-import { SetterGenerator } from './generator/setterGenerator';
-import { ClassGenerator } from './generator/classGenerator';
 import { Content } from './generator/models/content';
 import { Generator } from './generator/generator.interface';
 import { GeneratorFactory } from './generator/generatorFactory';
@@ -26,7 +24,6 @@ import { GeneratorFactory } from './generator/generatorFactory';
 })
 export class AppComponent implements OnInit {
 
-  /* FIELDS */
   @ViewChild('rootClassInput')
   private rootClassInput: ElementRef;
 
@@ -36,6 +33,7 @@ export class AppComponent implements OnInit {
   public rootClass: string;
   public json: string;
   public result: string;
+  private contents: Array<Content>;
 
   /* OPTIONS */
   private writer: Writer;
@@ -48,7 +46,7 @@ export class AppComponent implements OnInit {
   public emptyString = QuestionEnum;
   public encryptions = EncryptionEnum;
 
-  private contents: Array<Content>;
+  constructor(private utilService: UtilService) {}
 
   ngOnInit(): void {
     this.contents = new Array<Content>();
@@ -77,7 +75,7 @@ export class AppComponent implements OnInit {
     this.clearConsole();
     
     try {
-      const jsonParsed: any = UtilService.parseJson(this.json);
+      const jsonParsed: any = this.utilService.parseJson(this.json);
       const generator: Generator = GeneratorFactory.create(this.generatorType, this.options, this.writer);
 
       generator.create(jsonParsed, this.rootClass);
@@ -89,11 +87,11 @@ export class AppComponent implements OnInit {
   }
 
   public downloadContents() {
-    if (UtilService.isEmpty(this.contents)) {
+    if (this.utilService.isEmpty(this.contents)) {
       AlertService.showError('No content found.');
     }
 
-    this.contents.forEach(content => UtilService.downloadText(`${content.name}.ts`, content.text));
+    this.contents.forEach(content => this.utilService.downloadText(`${content.name}.ts`, content.text));
   }
 
   public resetFields() {
@@ -109,7 +107,7 @@ export class AppComponent implements OnInit {
   }
 
   private printContentsToConsole() {
-    if (UtilService.isEmpty(this.contents)) {
+    if (this.utilService.isEmpty(this.contents)) {
       AlertService.showError('No content was generated.');
     }
 
